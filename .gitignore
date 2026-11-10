@@ -1,0 +1,112 @@
+# Dependencies
+node_modules/
+
+# Environment variables and local configuration
+.env
+.env.*
+!.env.example
+*.local
+
+# Credentials and secrets
+keys/
+secrets/
+credentials.json
+token.json
+*.service-account.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime state
+*.pid
+*.pid.lock
+*.seed
+pids/
+
+# Test output and coverage
+coverage/
+.nyc_output/
+test-results/
+
+# Build output and caches
+dist/
+build/
+out/
+.cache/
+.parcel-cache/
+.eslintcache
+*.tsbuildinfo
+
+# Package-manager caches
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/install-state.gz
+.yarn/unplugged/
+
+# Local databases and database dumps
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+*.sqlite3
+*.dump
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Editor and IDE settings
+.idea/
+.vscode/
+*.code-workspace
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux and Unix desktop files
+.directory
+.Trash-*
+.fuse_hidden*
+.nfs*
+
+# Archives generated for deployment or backup
+*.zip
+*.tar
+*.tar.gz
+*.tgz
