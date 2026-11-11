@@ -1,18 +1,18 @@
 import { pool } from '../database.js';
 
 export async function reconcileCalendarReminder({
-    guildId,
-    scheduledReminders,
-    desiredExternalIds,
+  guildId,
+  scheduledReminders,
+  desiredExternalIds,
 }) {
-    const client = await pool.connect();
+  const client = await pool.connect();
 
-    try {
-        await client.query('BEGIN');
+  try {
+    await client.query('BEGIN');
 
-        for (const reminder of scheduledReminders) {
-            await client.query(
-                `
+    for (const reminder of scheduledReminders) {
+      await client.query(
+        `
                 INSERT INTO reminders (
                     guild_id,
                     channel_id,
@@ -54,30 +54,30 @@ export async function reconcileCalendarReminder({
                     updated_at = NOW()
                 WHERE reminders.locked_at IS NULL
                 `,
-                [
-                    guildId,
-                    reminder.channelId,
-                    reminder.externalId,
-                    reminder.message,
-                    reminder.roleId,
-                    reminder.nextRunAt,
-                ]
-            );
-        }
+        [
+          guildId,
+          reminder.channelId,
+          reminder.externalId,
+          reminder.message,
+          reminder.roleId,
+          reminder.nextRunAt,
+        ],
+      );
+    }
 
-        if (desiredExternalIds.length === 0){
-            await client.query(
-                `
+    if (desiredExternalIds.length === 0) {
+      await client.query(
+        `
                 DELETE FROM reminders
                 WHERE guild_id = $1
                     AND source = 'google_calendar'
                     AND locked_at IS NULL
                 `,
-                [guildId]
-            );
-        } else {
-            await client.query(
-                `
+        [guildId],
+      );
+    } else {
+      await client.query(
+        `
                 DELETE FROM reminders
                 WHERE guild_id = $1
                     AND source = 'google_calendar'
@@ -86,18 +86,15 @@ export async function reconcileCalendarReminder({
                     )
                     AND locked_at IS NULL
                 `,
-                [
-                    guildId,
-                    desiredExternalIds,
-                ]
-            );
-        }
-
-        await client.query('COMMIT');
-    } catch (error) {
-        await client.query('ROLLBACK');
-        throw error
-    } finally {
-        client.release();
+        [guildId, desiredExternalIds],
+      );
     }
+
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 }

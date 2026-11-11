@@ -24,22 +24,27 @@ Discord bot for FIRST Robotics Competition Team 4392, The Deceivers.
 2. Fill in the required configuration.
 3. Start PostgreSQL.
 4. Install dependencies:
+
    ```bash
    npm install
    ```
 5. Run database migrations:
-    ```bash
-    npm run migrate
-    ```
+
+   ```bash
+   npm run migrate
+   ```
 6. Register development commands:
-    ```bash
-    npm run register
-    ```
+
+   ```bash
+   npm run register
+   ```
 7. Start the bot:
-    ```bash
-    npm start
-    ```
+
+   ```bash
+   npm start
+   ```
 ## Calendar reminder tags
+
 Add one of these tags to a Google Calendar event description:
 
 - `[discord-reminders: 1w]`
@@ -51,6 +56,7 @@ Events without a tag do not create Discord reminders.
 All-day events are treated as starting at 8:00 AM Detroit time for reminder scheduling.
 
 ## Available commands
+
 - `/team` — Display FRC team identity, analytics, and event information
 - `/roles` — Post the self-assignable role panel
 - `/reminder once` — Create a one-time reminder
@@ -63,6 +69,7 @@ All-day events are treated as starting at 8:00 AM Detroit time for reminder sche
 
 Data sources
 Team information is provided by:
+
 - The Blue Alliance
 - Match13
 - Statbotics

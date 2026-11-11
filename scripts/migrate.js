@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { pool } from '../src/database.js';
 
 try {
-    await pool.query(`
+  await pool.query(`
         CREATE TABLE IF NOT EXISTS shared_links (
             guild_id TEXT NOT NULL,
             url_hash CHAR(64) NOT NULL,
@@ -21,12 +21,12 @@ try {
         );
     `);
 
-    await pool.query(`
+  await pool.query(`
         CREATE INDEX IF NOT EXISTS shared_links_expiration_idx
             ON shared_links (expires_at);
     `);
 
-    await pool.query(`
+  await pool.query(`
         CREATE TABLE IF NOT EXISTS reminders (
             id BIGSERIAL PRIMARY KEY,
 
@@ -80,22 +80,22 @@ try {
         );
     `);
 
-    await pool.query(`
+  await pool.query(`
         CREATE INDEX IF NOT EXISTS reminders_due_idx
             ON reminders (next_run_at)
             WHERE enabled = TRUE;
     `);
 
-    await pool.query(`
+  await pool.query(`
         CREATE UNIQUE INDEX IF NOT EXISTS reminders_external_idx
             ON reminders (guild_id, source, external_id)
             WHERE external_id IS NOT NULL;
     `);
 
-    console.log('Database migration completed successfully.');
+  console.log('Database migration completed successfully.');
 } catch (error) {
-    console.error('Database migration failed:', error);
-    process.exitCode = 1;
+  console.error('Database migration failed:', error);
+  process.exitCode = 1;
 } finally {
-    await pool.end();
+  await pool.end();
 }

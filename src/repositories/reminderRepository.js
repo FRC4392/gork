@@ -1,15 +1,15 @@
 import { pool } from '../database.js';
 
 export async function createOneTimeReminder({
-    guildId,
-    channelId,
-    message,
-    roleId,
-    nextRunAt,
-    userId,
+  guildId,
+  channelId,
+  message,
+  roleId,
+  nextRunAt,
+  userId,
 }) {
-    const result = await pool.query(
-        `
+  const result = await pool.query(
+    `
         INSERT INTO reminders (
             guild_id,
             channel_id,
@@ -23,31 +23,24 @@ export async function createOneTimeReminder({
         VALUES ($1, $2, 'once', $3, $4, $5, $6, $6)
         RETURNING *
         `,
-        [
-            guildId,
-            channelId,
-            message,
-            roleId,
-            nextRunAt,
-            userId,
-        ]
-    );
+    [guildId, channelId, message, roleId, nextRunAt, userId],
+  );
 
-    return result.rows[0];
+  return result.rows[0];
 }
 
 export async function createWeeklyReminder({
-    guildId,
-    channelId,
-    message,
-    roleId,
-    weeklyDays,
-    localTime,
-    nextRunAt,
-    userId,
+  guildId,
+  channelId,
+  message,
+  roleId,
+  weeklyDays,
+  localTime,
+  nextRunAt,
+  userId,
 }) {
-    const result = await pool.query(
-        `
+  const result = await pool.query(
+    `
         INSERT INTO reminders (
             guild_id,
             channel_id,
@@ -74,24 +67,24 @@ export async function createWeeklyReminder({
         )
         RETURNING *
         `,
-        [
-            guildId,
-            channelId,
-            message,
-            roleId,
-            weeklyDays,
-            localTime,
-            nextRunAt,
-            userId,
-        ]
-    );
+    [
+      guildId,
+      channelId,
+      message,
+      roleId,
+      weeklyDays,
+      localTime,
+      nextRunAt,
+      userId,
+    ],
+  );
 
-    return result.rows[0];
+  return result.rows[0];
 }
 
 export async function listReminders(guildId) {
-    const result = await pool.query(
-        `
+  const result = await pool.query(
+    `
         SELECT *
         FROM reminders
         WHERE guild_id = $1
@@ -100,18 +93,15 @@ export async function listReminders(guildId) {
             next_run_at ASC
         LIMIT 25
         `,
-        [guildId]
-    );
+    [guildId],
+  );
 
-    return result.rows;
+  return result.rows;
 }
 
-export async function claimDueReminders(
-    workerId,
-    limit = 10
-) {
-    const result = await pool.query(
-        `
+export async function claimDueReminders(workerId, limit = 10) {
+  const result = await pool.query(
+    `
         WITH due_reminders AS (
             SELECT id
             FROM reminders
@@ -133,21 +123,15 @@ export async function claimDueReminders(
         WHERE reminders.id = due_reminders.id
         RETURNING reminders.*
         `,
-        [
-            limit,
-            workerId
-        ]
-    );
+    [limit, workerId],
+  );
 
-    return result.rows;
+  return result.rows;
 }
 
-export async function completeOneTimeReminder(
-    reminderId,
-    workId
-) {
-    await pool.query(
-        `
+export async function completeOneTimeReminder(reminderId, workId) {
+  await pool.query(
+    `
         UPDATE reminders
         SET
             enabled = FALSE,
@@ -158,20 +142,13 @@ export async function completeOneTimeReminder(
         WHERE id = $1
             AND locked_by = $2
         `,
-        [
-            reminderId,
-            workId,
-        ]
-    );
+    [reminderId, workId],
+  );
 }
 
-export async function completeWeeklyReminder(
-    reminderId,
-    workerId,
-    nextRunAt
-) {
-    await pool.query(
-        `
+export async function completeWeeklyReminder(reminderId, workerId, nextRunAt) {
+  await pool.query(
+    `
         UPDATE reminders
         SET
             next_run_at = $3,
@@ -182,18 +159,11 @@ export async function completeWeeklyReminder(
         WHERE id = $1
             AND locked_by = $2
         `,
-        [
-            reminderId,
-            workerId,
-            nextRunAt,
-        ]
-    );
+    [reminderId, workerId, nextRunAt],
+  );
 }
 
-export async function markReminderFailed(
-  reminderId,
-  workerId
-) {
+export async function markReminderFailed(reminderId, workerId) {
   await pool.query(
     `
       UPDATE reminders
@@ -204,15 +174,12 @@ export async function markReminderFailed(
       WHERE id = $1
         AND locked_by = $2
     `,
-    [
-      reminderId,
-      workerId,
-    ]
+    [reminderId, workerId],
   );
 }
 
 export async function getReminder(guildId, reminderId) {
-    const result = await pool.query(
+  const result = await pool.query(
     `
     SELECT *
     FROM reminders
@@ -220,26 +187,23 @@ export async function getReminder(guildId, reminderId) {
         AND id = $2
     LIMIT 1
     `,
-    [
-        guildId,
-        reminderId,
-    ]
-    );
+    [guildId, reminderId],
+  );
 
-    return result.rows[0] ?? null;
+  return result.rows[0] ?? null;
 }
 
 export async function updateManualReminder({
-    guildId,
-    reminderId,
-    message,
-    roleId,
-    weeklyDays,
-    localTime,
-    nextRunAt,
-    userId,
+  guildId,
+  reminderId,
+  message,
+  roleId,
+  weeklyDays,
+  localTime,
+  nextRunAt,
+  userId,
 }) {
-    const result = await pool.query(
+  const result = await pool.query(
     `
     UPDATE reminders
     SET
@@ -257,26 +221,22 @@ export async function updateManualReminder({
     RETURNING *
     `,
     [
-        guildId,
-        reminderId,
-        message,
-        roleId,
-        weeklyDays,
-        localTime,
-        nextRunAt,
-        userId,
-    ]
+      guildId,
+      reminderId,
+      message,
+      roleId,
+      weeklyDays,
+      localTime,
+      nextRunAt,
+      userId,
+    ],
   );
 
-    return result.rows[0] ?? null;
+  return result.rows[0] ?? null;
 }
 
-export async function pauseReminder({
-    guildId,
-    reminderId,
-    userId,
-}) {
-    const result = await pool.query(
+export async function pauseReminder({ guildId, reminderId, userId }) {
+  const result = await pool.query(
     `
     UPDATE reminders
     SET
@@ -289,23 +249,19 @@ export async function pauseReminder({
         AND locked_at IS NULL
     RETURNING *
     `,
-    [
-        guildId,
-        reminderId,
-        userId,
-    ]
+    [guildId, reminderId, userId],
   );
 
-    return result.rows[0] ?? null;
+  return result.rows[0] ?? null;
 }
 
 export async function resumeReminder({
-    guildId,
-    reminderId,
-    nextRunAt,
-    userId,
+  guildId,
+  reminderId,
+  nextRunAt,
+  userId,
 }) {
-    const result = await pool.query(
+  const result = await pool.query(
     `
     UPDATE reminders
     SET
@@ -319,22 +275,14 @@ export async function resumeReminder({
         AND locked_at IS NULL
     RETURNING *
     `,
-    [
-        guildId,
-        reminderId,
-        nextRunAt,
-        userId,
-    ]
+    [guildId, reminderId, nextRunAt, userId],
   );
 
   return result.rows[0] ?? null;
 }
 
-export async function deleteReminder({
-    guildId,
-    reminderId,
-}) {
-    const result = await pool.query(
+export async function deleteReminder({ guildId, reminderId }) {
+  const result = await pool.query(
     `
     DELETE FROM reminders
     WHERE guild_id = $1
@@ -343,11 +291,8 @@ export async function deleteReminder({
         AND locked_at IS NULL
     RETURNING *
     `,
-    [
-        guildId,
-        reminderId,
-    ]
-    );
+    [guildId, reminderId],
+  );
 
-    return result.rows[0] ?? null;
+  return result.rows[0] ?? null;
 }

@@ -1,22 +1,22 @@
-import pg from 'pg'
+import pg from 'pg';
 
 const { Pool } = pg;
 
 if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL is not configured');
+  throw new Error('DATABASE_URL is not configured');
 }
 
 export const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
 
-    ssl:
-        process.env.DATABASE_SSL === 'true'
-            ? {
-                rejectUnauthorized: false,
-            }
-            : false,
+  ssl:
+    process.env.DATABASE_SSL === 'true'
+      ? {
+          rejectUnauthorized: false,
+        }
+      : false,
 });
 
 pool.on('error', (error) => {
-    console.error('Unexpected PostgreSQL error:', error);
+  console.error('Unexpected PostgreSQL error:', error);
 });
