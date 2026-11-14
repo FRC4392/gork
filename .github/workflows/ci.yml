@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24          # match "engines" in package.json
+          cache: npm
+      - run: npm ci                 # installs exact versions from package-lock.json
+      - run: npm run lint           # or whatever check script the project has
+      - run: npm test --if-present  # runs tests if the project has them
