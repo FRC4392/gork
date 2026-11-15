@@ -30,7 +30,7 @@
   "Please make documentation F.I.R.S.T.",
   "After **that** you have to donate",
   "//potato",
-  "I feel that \"Kris is a dominate alpha\" by jenesis is the only **valid** response",
+  "I feel that \"Kris is a dominant alpha\" by jenesis is the only **valid** response",
   "My coherence FAILED. \"'May I strloelble the rehapenstance of the seahorse?\"",
   "Give **me** the spotlight!",
   "It just works",
@@ -52,5 +52,10 @@
   "Your solution is is in https://www.youtube.com/watch?v=Ic7OUfm4IQE",
   "Like a car that rotates it wheels",
   "\"there like totaly cringe\" - mrs.Pomeroy",
-  "\"Safety is the enemy of progress\" - maybe philip"
+  "\"Safety is the enemy of progress\" - maybe philip",
+  "no.",
+  "*starts life insurance auto*",
+  "*starts bean auto*",
+  "<@1568786978671956059>",
+  "```ItemEvents.entityInteracted('kubejs:obsidian_bucket', event => {const {item, player, target} = event if(event.target.type != 'minecraft:cow') return item.shrink(1) player.giveInHand('kubejs:obsidian_milk_bucket') target.playSound('minecraft:entity.cow.milk')})```"
 ]
