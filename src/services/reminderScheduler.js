@@ -27,13 +27,19 @@ async function sendReminder(client, reminder) {
     ? `<@&${reminder.role_id}>\n${reminder.message}`
     : reminder.message;
 
-  await channel.send({
+  const message = await channel.send({
     content,
     allowedMentions: {
       parse: [],
       roles: reminder.role_id ? [reminder.role_id] : [],
     },
   });
+
+  try {
+    await message.react('1548130409064431616');
+  } catch (error) {
+    console.error(`Could not react to reminder ${message.id}:`, error);
+  }
 }
 
 async function processReminder(client, workerId, reminder) {
