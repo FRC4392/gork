@@ -1,3 +1,5 @@
+import * as chrono from 'chrono-node';
+
 import { DateTime } from 'luxon';
 
 export const REMINDER_TIMEZONE = 'America/Detroit';
@@ -35,25 +37,53 @@ const WEEKDAY_NAMES = [
 
 export class ReminderValidationError extends Error {}
 
-export function parseOneTimeReminder(date, time) {
-  const dateTime = DateTime.fromFormat(`${date} ${time}`, 'yyyy-MM-dd HH:mm', {
-    zone: REMINDER_TIMEZONE,
-    setZone: true,
-  });
+function parseNatural(text) {
+  const now = DateTime.now().setZone(REMINDER_TIMEZONE);
 
-  if (!dateTime.isValid) {
+  const [result] = chrono.parse(
+    text,
+    { instant: now.toJSDate(), timezone: now.offset },
+    { forwardDate: true },
+  );
+
+  if (!result) {
+    return null;
+  }
+
+  const s = result.start;
+
+  return {
+    hasTime: s.isCertain('hour'),
+    hasDate: s.isCertain('day') || s.isCertain('weekday'),
+    dateTime: DateTime.fromObject(
+      {
+        year: s.get('year'),
+        month: s.get('month'),
+        day: s.get('day'),
+        hour: s.get('hour'),
+        minute: s.get('minute'),
+      },
+      { zone: REMINDER_TIMEZONE },
+    ),
+  };
+}
+
+export function parseOneTimeReminder(date, time) {
+  const parsedDateTime = parseNatural(`${date} at ${time}`);
+
+  if (!parsedDateTime?.hasTime || !parsedDateTime?.hasDate) {
     throw new ReminderValidationError(
-      'Use `YYYY-MM-DD` for the date and `HH:MM in 24-hour time.',
+      "I couldn't understand that date and time. Try something like `tomorrow` + `6pm`, `next fri` + `3:30pm`, or `11/20` + `18:30`.",
     );
   }
 
-  if (dateTime <= DateTime.now()) {
+  if (parsedDateTime.dateTime <= DateTime.now()) {
     throw new ReminderValidationError(
       'The reminder must be scheduled in the future.',
     );
   }
 
-  return dateTime.toJSDate();
+  return parsedDateTime.dateTime.toJSDate();
 }
 
 export function parseWeeklyDays(input) {
@@ -86,20 +116,18 @@ export function parseWeeklyDays(input) {
 }
 
 export function parseTime(input) {
-  const parsed = DateTime.fromFormat(input, 'HH:mm', {
-    zone: REMINDER_TIMEZONE,
-  });
+  const parsed = parseNatural(input);
 
-  if (!parsed.isValid) {
+  if (!parsed?.hasTime) {
     throw new ReminderValidationError(
-      'Use HH:MM in 24-hour time, such as `18:30`.',
+      "I couldn't understand that time. Try something like `6pm`, `6:30 pm`, `18:30`, or `noon`.",
     );
   }
 
   return {
-    hour: parsed.hour,
-    minute: parsed.minute,
-    databaseValue: input,
+    hour: parsed.dateTime.hour,
+    minute: parsed.dateTime.minute,
+    databaseValue: parsed.dateTime.toFormat('HH:mm'),
   };
 }
 
