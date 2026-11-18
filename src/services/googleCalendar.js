@@ -7,7 +7,7 @@ function getGoogleCredentials() {
   const encoded = process.env.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64;
 
   if (!encoded) {
-    throw new Error('GOOGLE_SERVICE_ACCOUNT_JASON_BASE64 is not configured');
+    throw new Error('GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 is not configured');
   }
 
   return JSON.parse(Buffer.from(encoded, 'base64').toString('utf8'));

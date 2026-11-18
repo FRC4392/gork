@@ -213,11 +213,13 @@ export async function updateManualReminder({
         local_time = $6,
         next_run_at = $7,
         updated_by = $8,
-        updated_at = NOW()
+        updated_at = NOW(),
+        locked_at = NULL,
+        locked_by = NULL
     WHERE guild_id = $1
         AND id = $2
         AND source = 'manual'
-        AND locked_at IS NULL
+        AND (locked_by IS NULL OR locked_at < NOW() - INTERVAL '5 minutes')
     RETURNING *
     `,
     [
@@ -246,7 +248,7 @@ export async function pauseReminder({ guildId, reminderId, userId }) {
     WHERE guild_id = $1
         AND id = $2
         AND source = 'manual'
-        AND locked_at IS NULL
+        AND (locked_by IS NULL OR locked_at < NOW() - INTERVAL '5 minutes')
     RETURNING *
     `,
     [guildId, reminderId, userId],
@@ -268,11 +270,13 @@ export async function resumeReminder({
         enabled = TRUE,
         next_run_at = $3,
         updated_by = $4,
-        updated_at = NOW()
+        updated_at = NOW(),
+        locked_at = NULL,
+        locked_by = NULL
     WHERE guild_id = $1
         AND id = $2
         AND source = 'manual'
-        AND locked_at IS NULL
+        AND (locked_by IS NULL OR locked_at < NOW() - INTERVAL '5 minutes')
     RETURNING *
     `,
     [guildId, reminderId, nextRunAt, userId],
@@ -288,7 +292,7 @@ export async function deleteReminder({ guildId, reminderId }) {
     WHERE guild_id = $1
         AND id = $2
         AND source = 'manual'
-        AND locked_at IS NULL
+        AND (locked_by IS NULL OR locked_at < NOW() - INTERVAL '5 minutes')
     RETURNING *
     `,
     [guildId, reminderId],
