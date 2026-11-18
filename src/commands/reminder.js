@@ -360,8 +360,27 @@ export async function execute(interaction) {
         return;
       }
 
+      const lines = [];
+      let length = 0;
+
+      for (const reminder of reminders) {
+        const entry = formatReminder(reminder);
+
+        if (length + entry.length + 2 > 1900) {
+          if (reminders.length < 25) {
+            lines.push(`...and ${reminders.length - lines.length} more.`);
+          } else {
+            lines.push(`...and over ${reminders.length - lines.length} more.`);
+          }
+          break;
+        }
+
+        lines.push(entry);
+        length += entry.length + 2;
+      }
+
       await interaction.editReply({
-        content: reminders.map(formatReminder).join('\n\n'),
+        content: lines.join('\n\n'),
         allowedMentions: {
           parse: [],
         },

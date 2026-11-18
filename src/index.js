@@ -84,7 +84,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
   } catch (error) {
     console.error('Interaction failed:', error);
-    await sendInteractionError(interaction);
+    try {
+      await sendInteractionError(interaction);
+    } catch (error) {
+      console.error('Could not send the error reply:', error);
+    }
   }
 });
 
@@ -96,5 +100,13 @@ client.on(Events.MessageCreate, async (message) => {
     console.error(`Failed to process message ${message.id}:`, error);
   }
 });
+
+client.on(Events.Error, (error) =>
+  console.error('Discord client error:', error),
+);
+
+process.on('unhandledRejection', (error) =>
+  console.error('Unhandled rejection:', error),
+);
 
 client.login(process.env.DISCORD_TOKEN);

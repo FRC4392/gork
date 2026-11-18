@@ -52,7 +52,7 @@ export async function reconcileCalendarReminder({
                     last_sent_at = NULL,
                     updated_by = 'google-calendar',
                     updated_at = NOW()
-                WHERE reminders.locked_at IS NULL
+                WHERE (reminders.locked_by IS NULL OR reminders.locked_at < NOW() - INTERVAL '5 minutes')
                 `,
         [
           guildId,
@@ -71,7 +71,7 @@ export async function reconcileCalendarReminder({
                 DELETE FROM reminders
                 WHERE guild_id = $1
                     AND source = 'google_calendar'
-                    AND locked_at IS NULL
+                    AND (locked_by IS NULL OR locked_at < NOW() - INTERVAL '5 minutes')
                 `,
         [guildId],
       );
@@ -84,7 +84,7 @@ export async function reconcileCalendarReminder({
                     AND NOT (
                         external_id = ANY($2::text[])
                     )
-                    AND locked_at IS NULL
+                    AND (locked_by IS NULL OR locked_at < NOW() - INTERVAL '5 minutes')
                 `,
         [guildId, desiredExternalIds],
       );
