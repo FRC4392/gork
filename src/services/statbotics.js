@@ -3,6 +3,7 @@ const STATBOTICS_BASE_URL = 'https://api.statbotics.io/v3';
 export async function getStatboticsTeamYear(teamNumber, year) {
   const response = await fetch(
     `${STATBOTICS_BASE_URL}/team_year/${teamNumber}/${year}`,
+    { signal: AbortSignal.timeout(10_000) },
   );
 
   if (response.status === 404) {

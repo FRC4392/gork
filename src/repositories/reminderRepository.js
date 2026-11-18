@@ -88,6 +88,12 @@ export async function listReminders(guildId) {
         SELECT *
         FROM reminders
         WHERE guild_id = $1
+          AND NOT (
+            kind = 'once'
+            AND enabled = FALSE
+            AND last_sent_at IS NOT NULL
+            AND last_sent_at < NOW() - INTERVAL '1 day'
+          )
         ORDER BY
             enabled DESC,
             next_run_at ASC
@@ -299,4 +305,18 @@ export async function deleteReminder({ guildId, reminderId }) {
   );
 
   return result.rows[0] ?? null;
+}
+
+export async function deleteCompletedReminders() {
+  const result = await pool.query(`
+    DELETE FROM reminders
+    WHERE kind = 'once'
+      AND source = 'manual'
+      AND enabled = FALSE
+      and last_sent_at IS NOT NULL
+      and last_sent_at < NOW() - INTERVAL '30 days'
+      and locked_by IS NULL
+    `);
+
+  return result.rowCount;
 }

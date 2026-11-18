@@ -7,6 +7,7 @@ export async function getMatch13TeamSeason(teamNumber, year) {
       headers: {
         Authorization: `Bearer ${process.env.MATCH13_API_KEY}`,
       },
+      signal: AbortSignal.timeout(10_000),
     },
   );
 
