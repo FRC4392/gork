@@ -1,14 +1,16 @@
 import 'dotenv/config';
 
 import { REST, Routes } from 'discord.js';
-import { data as reminderCommand } from '../src/commands/reminder.js';
+//import { data as reminderCommand } from '../src/commands/reminder.js';
 import { data as rolesCommand } from '../src/commands/roles.js';
 import { data as teamCommand } from '../src/commands/team.js';
+import { data as test_gamble } from '../src/commands/test_gamble.js';
 
 const commands = [
   teamCommand.toJSON(),
   rolesCommand.toJSON(),
-  reminderCommand.toJSON(),
+  test_gamble.toJSON(),
+  // reminderCommand.toJSON(),
 ];
 
 const rest = new REST().setToken(process.env.DISCORD_TOKEN);

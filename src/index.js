@@ -1,15 +1,16 @@
 import 'dotenv/config';
 
 import { Client, Events, GatewayIntentBits, MessageFlags } from 'discord.js';
-import { execute as executeReminder } from './commands/reminder.js';
+// import { execute as executeReminder } from './commands/reminder.js';
 import { execute as executeRoles } from './commands/roles.js';
 import { execute as executeTeam } from './commands/team.js';
+import { execute as executeTestGamble } from './commands/test_gamble.js'; // match your actual filename
 import { handleMentionReply } from './events/mentionReply.js';
-import { handleMessageCreate } from './events/messageCreate.js';
+//import { handleMessageCreate } from './events/messageCreate.js';
 import { handleRoleButton } from './interactions/roleButton.js';
-import { deleteExpiredLinks } from './repositories/linkRepository.js';
-import { startGoogleCalendarSync } from './services/googleCalendarSync.js';
-import { startReminderScheduler } from './services/reminderScheduler.js';
+// import { deleteExpiredLinks } from './repositories/linkRepository.js';
+// import { startGoogleCalendarSync } from './services/googleCalendarSync.js';
+// import { startReminderScheduler } from './services/reminderScheduler.js';
 
 const client = new Client({
   intents: [
@@ -22,26 +23,26 @@ const client = new Client({
 client.once(Events.ClientReady, (readyClient) => {
   console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 
-  const runCleanup = async () => {
-    try {
-      const deletedCount = await deleteExpiredLinks();
+  // const runCleanup = async () => {
+  //   try {
+  //     const deletedCount = await deleteExpiredLinks();
 
-      if (deletedCount > 0) {
-        console.log(`Deleted ${deletedCount} expired link records.`);
-      }
-    } catch (error) {
-      console.error('Link cleanup failed:', error);
-    }
-  };
+  //     if (deletedCount > 0) {
+  //       console.log(`Deleted ${deletedCount} expired link records.`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Link cleanup failed:', error);
+  //   }
+  // };
 
-  runCleanup();
+  // runCleanup();
 
-  const cleanupInterval = setInterval(runCleanup, 24 * 60 * 60 * 1000);
+  // const cleanupInterval = setInterval(runCleanup, 24 * 60 * 60 * 1000);
 
-  cleanupInterval.unref();
+  // cleanupInterval.unref();
 
-  startReminderScheduler(readyClient);
-  startGoogleCalendarSync();
+  // startReminderScheduler(readyClient);
+  // startGoogleCalendarSync();
 });
 
 async function sendInteractionError(interaction) {
@@ -69,8 +70,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await executeTeam(interaction);
       } else if (interaction.commandName === 'roles') {
         await executeRoles(interaction);
-      } else if (interaction.commandName === 'reminder') {
-        await executeReminder(interaction);
+      } else if (interaction.commandName === 'test_gamble') {
+        await executeTestGamble(interaction);
       }
 
       return;
@@ -90,7 +91,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on(Events.MessageCreate, async (message) => {
   try {
-    await handleMessageCreate(message);
+    // await handleMessageCreate(message);
     await handleMentionReply(message);
   } catch (error) {
     console.error(`Failed to process message ${message.id}:`, error);

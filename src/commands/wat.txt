@@ -1,0 +1,8 @@
+{"key":"2023miesc_qm2",
+"pred":{"blueRp1":0.011651,"blueRp2":0.157295,"blueRp3":null,"blueScore":42.5487,"blueVar":535.4671,"redRp1":0.001645,"redRp2":0.104435,"redRp3":null,"redScore":25.2907,"redVar":535.4671,"winProb":0.31068,
+"teams":{"4375":{"alliance":"blue","position":3,"xAutoPost":5.8047,"xAutoPre":6.4754,"xEndPost":5.4546,"xEndPre":4.5128,"xTelePost":14.426,"xTelePre":15.5817,"xpPost":25.6853,"xpPre":26.5699},
+"4835":{"alliance":"red","position":3,"xAutoPost":4.4061,"xAutoPre":5.3596,"xEndPost":6.1764,"xEndPre":6.8773,"xTelePost":6.0065,"xTelePre":6.1713,"xpPost":16.5891,"xpPre":18.4082},
+"5534":{"alliance":"blue","position":2,"xAutoPost":4.3883,"xAutoPre":4.9333,"xEndPost":3.5506,"xEndPre":2.4813,"xTelePost":15.0106,"xTelePre":15.8846,"xpPost":22.9495,"xpPre":23.2992},
+"6558":{"alliance":"red","position":2,"xAutoPost":5.3335,"xAutoPre":6.6178,"xEndPost":3.3755,"xEndPre":3.7653,"xTelePost":6.6006,"xTelePre":7.1664,"xpPost":15.3095,"xpPre":17.5494},
+"7250":{"alliance":"blue","position":1,"xAutoPost":5.6194,"xAutoPre":5.9049,"xEndPost":8.0347,"xEndPre":9.3925,"xTelePost":9.1208,"xTelePre":9.6769,"xpPost":22.7748,"xpPre":24.9744},
+"8382":{"alliance":"red","position":1,"xAutoPost":5.7974,"xAutoPre":7.0054,"xEndPost":4.4915,"xEndPre":3.6531,"xTelePost":8.4914,"xTelePre":9.2163,"xpPost":18.7804,"xpPre":19.8748}}}
