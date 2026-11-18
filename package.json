@@ -20,14 +20,15 @@
   "author": "FRC Team 4392",
   "license": "MIT",
   "dependencies": {
+    "chrono-node": "^2.10.3",
     "discord.js": "^14.28.1",
-    "dotenv": "^16.0.3",
+    "dotenv": "^18.0.10",
     "googleapis": "^189.0.0",
     "luxon": "^3.7.2",
     "pg": "^8.23.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
-    "nodemon": "^3.0.0"
+    "nodemon": "^3.1.14"
   }
 }

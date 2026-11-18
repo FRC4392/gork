@@ -8,6 +8,7 @@ import { handleMentionReply } from './events/mentionReply.js';
 import { handleMessageCreate } from './events/messageCreate.js';
 import { handleRoleButton } from './interactions/roleButton.js';
 import { deleteExpiredLinks } from './repositories/linkRepository.js';
+import { deleteCompletedReminders } from './repositories/reminderRepository.js';
 import { startGoogleCalendarSync } from './services/googleCalendarSync.js';
 import { startReminderScheduler } from './services/reminderScheduler.js';
 
@@ -31,6 +32,16 @@ client.once(Events.ClientReady, (readyClient) => {
       }
     } catch (error) {
       console.error('Link cleanup failed:', error);
+    }
+
+    try {
+      const deletedReminders = await deleteCompletedReminders();
+
+      if (deletedReminders > 0) {
+        console.log(`Deleted ${deletedReminders} completed reminders.`);
+      }
+    } catch (error) {
+      console.error('Reminder cleanup failed:', error);
     }
   };
 
@@ -84,7 +95,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
   } catch (error) {
     console.error('Interaction failed:', error);
-    await sendInteractionError(interaction);
+    try {
+      await sendInteractionError(interaction);
+    } catch (error) {
+      console.error('Could not send the error reply:', error);
+    }
   }
 });
 
@@ -96,5 +111,13 @@ client.on(Events.MessageCreate, async (message) => {
     console.error(`Failed to process message ${message.id}:`, error);
   }
 });
+
+client.on(Events.Error, (error) =>
+  console.error('Discord client error:', error),
+);
+
+process.on('unhandledRejection', (error) =>
+  console.error('Unhandled rejection:', error),
+);
 
 client.login(process.env.DISCORD_TOKEN);

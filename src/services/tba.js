@@ -5,6 +5,7 @@ async function tbaRequest(path) {
     headers: {
       'X-TBA-Auth-Key': process.env.TBA_AUTH_KEY,
     },
+    signal: AbortSignal.timeout(10_000),
   });
 
   if (response.status === 404) {

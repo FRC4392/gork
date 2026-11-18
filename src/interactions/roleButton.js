@@ -31,7 +31,7 @@ export async function handleRoleButton(interaction) {
 
   if (!role) {
     await interaction.reply({
-      content: 'That role no longer exists. Please notify and administrator.',
+      content: 'That role no longer exists. Please notify an administrator.',
       flags: MessageFlags.Ephemeral,
     });
 
