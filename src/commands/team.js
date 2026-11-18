@@ -1,7 +1,9 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { DateTime } from 'luxon';
 import { getMatch13TeamSeason } from '../services/match13.js';
 import { getStatboticsTeamYear } from '../services/statbotics.js';
 import { getTeam, getTeamEventStatus, getTeamEvents } from '../services/tba.js';
+import { REMINDER_TIMEZONE } from '../utils/reminderTime.js';
 
 export const data = new SlashCommandBuilder()
   .setName('team')
@@ -22,7 +24,7 @@ export const data = new SlashCommandBuilder()
   );
 
 function findRelevantEvents(events) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = DateTime.now().setZone(REMINDER_TIMEZONE).toISODate();
 
   const eventsWithDates = events.filter(
     (event) => event.start_date && event.end_date,
@@ -116,7 +118,8 @@ function formatNumber(value) {
 export async function execute(interaction) {
   const teamNumber = interaction.options.getInteger('number') ?? 4392;
   const year =
-    interaction.options.getInteger('year') ?? new Date().getFullYear();
+    interaction.options.getInteger('year') ??
+    DateTime.now().setZone(REMINDER_TIMEZONE).year;
 
   await interaction.deferReply();
 
@@ -158,7 +161,11 @@ export async function execute(interaction) {
   let previousStatus = null;
 
   if (previousEvent !== null) {
-    previousStatus = await getTeamEventStatus(teamNumber, previousEvent.key);
+    try {
+      previousStatus = await getTeamEventStatus(teamNumber, previousEvent.key);
+    } catch (error) {
+      console.error('TBA event status lookup failed:', error);
+    }
   }
 
   const location = [team.city, team.state_prov, team.country]
@@ -191,8 +198,10 @@ export async function execute(interaction) {
         value: [
           `xP: ${formatNumber(xp)}`,
           `EPA: ${formatNumber(epa)}`,
-          match13 ? `Match13 season rank: #${match13.rank}` : null,
-          match13
+          match13?.rank != null
+            ? `Match13 season rank: #${match13.rank}`
+            : null,
+          match13?.percentile != null
             ? `Match13 percentile: ${formatNumber(match13.percentile)}`
             : null,
         ]

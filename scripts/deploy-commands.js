@@ -29,4 +29,5 @@ try {
   console.log('Commands registered sucessfully');
 } catch (error) {
   console.error('Failed to register commands:', error);
+  process.exitCode = 1;
 }
