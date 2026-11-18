@@ -37,15 +37,15 @@ export const data = new SlashCommandBuilder()
       .addStringOption((option) =>
         option
           .setName('date')
-          .setDescription('Date in the YYYY-MM-DD format')
-          .setMaxLength(10)
+          .setDescription('Date, e.g. "tomorrow", "next fri", "11/20"')
+          .setMaxLength(50)
           .setRequired(true),
       )
       .addStringOption((option) =>
         option
           .setName('time')
-          .setDescription('Time in HH:MM 24-hour format')
-          .setMaxLength(5)
+          .setDescription('Time, e.g. "6pm", "18:30", "noon"')
+          .setMaxLength(50)
           .setRequired(true),
       )
       .addStringOption((option) =>
@@ -76,8 +76,8 @@ export const data = new SlashCommandBuilder()
       .addStringOption((option) =>
         option
           .setName('time')
-          .setDescription('Time in HH:MM 24-hour format')
-          .setMaxLength(5)
+          .setDescription('Time, e.g. "6pm", "18:30", "noon"')
+          .setMaxLength(50)
           .setRequired(true),
       )
       .addStringOption((option) =>
@@ -118,15 +118,17 @@ export const data = new SlashCommandBuilder()
       .addStringOption((option) =>
         option
           .setName('date')
-          .setDescription('New date for a one-time reminder')
-          .setMaxLength(10)
+          .setDescription(
+            'New date for a one time reminder, e.g. "tomorrow", "next fri", "11/20"',
+          )
+          .setMaxLength(50)
           .setRequired(false),
       )
       .addStringOption((option) =>
         option
           .setName('time')
-          .setDescription('New Detroit time in HH:MM format')
-          .setMaxLength(5)
+          .setDescription('New time, e.g. "6pm", "18:30", "noon"')
+          .setMaxLength(50)
           .setRequired(false),
       )
       .addStringOption((option) =>
@@ -340,7 +342,7 @@ export async function execute(interaction) {
       await interaction.editReply({
         content: [
           `Created reminder **#${reminder.id}**.`,
-          `Repeats ${formatWeeklyDays(weeklyDays)} at ${timeInput}.`,
+          `Repeats ${formatWeeklyDays(weeklyDays)} at ${localTime}.`,
           `Next occurrence: ${formatDetroitDate(reminder.next_run_at)}.`,
         ].join('\n'),
         allowedMentions: {
@@ -423,14 +425,14 @@ export async function execute(interaction) {
       let nextRunAt = reminder.next_run_at;
 
       if (reminder.kind === 'once') {
-        if (new Date(nextRunAt) <= Date()) {
+        if (new Date(nextRunAt) <= new Date()) {
           throw new ReminderValidationError(
             'This one-time reminder is in the past. Edit its date or time before resuming it.',
           );
         }
       } else {
         nextRunAt = getNextWeeklyOccurrence(
-          reminder.weeklyDays,
+          reminder.weekly_days,
           String(reminder.local_time).slice(0, 5),
         );
       }
