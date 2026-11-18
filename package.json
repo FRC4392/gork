@@ -20,6 +20,7 @@
   "author": "FRC Team 4392",
   "license": "MIT",
   "dependencies": {
+    "chrono-node": "^2.10.3",
     "discord.js": "^14.28.1",
     "dotenv": "^16.0.3",
     "googleapis": "^189.0.0",
