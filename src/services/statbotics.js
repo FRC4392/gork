@@ -16,18 +16,18 @@ export async function getStatboticsTeamYear(teamNumber, year) {
   return response.json();
 }
 
-export async function gaambling_odds(current_event, match) {
+export async function getPredictionOddsStatbotics(current_event, match) {
   const response = await fetch(
-    '${STATBOTICS_BASE_URL}/event/${current_event}',
-  )
+    `${STATBOTICS_BASE_URL}/event/${current_event}`,
+  );
 
   if (response.status === 404) {
     return null;
   }
 
   if (!response.ok) {
-  throw new Error(`Statbotics request failed with status ${response.status}`);
+    throw new Error(`Statbotics request failed with status ${response.status}`);
+  }
 
   return response.json();
-  }
 }

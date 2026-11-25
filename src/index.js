@@ -4,7 +4,7 @@ import { Client, Events, GatewayIntentBits, MessageFlags } from 'discord.js';
 // import { execute as executeReminder } from './commands/reminder.js';
 import { execute as executeRoles } from './commands/roles.js';
 import { execute as executeTeam } from './commands/team.js';
-import { execute as executeTestGamble } from './commands/test_gamble.js'; // match your actual filename
+import { execute as executeTestGamble } from './commands/setPredictions.js'; // match your actual filename
 import { handleMentionReply } from './events/mentionReply.js';
 //import { handleMessageCreate } from './events/messageCreate.js';
 import { handleRoleButton } from './interactions/roleButton.js';
@@ -70,7 +70,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await executeTeam(interaction);
       } else if (interaction.commandName === 'roles') {
         await executeRoles(interaction);
-      } else if (interaction.commandName === 'test_gamble') {
+      } else if (interaction.commandName === 'setPredictions') {
         await executeTestGamble(interaction);
       }
 

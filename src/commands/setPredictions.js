@@ -1,11 +1,11 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'; // this our discord crap like /commands and stuff and read messages
-import { getMatch13TeamSeason, getGamblingOdds} from '../services/match13.js';
+import { getMatch13TeamSeason, getPredictionsOdds} from '../services/match13.js';
 //import { getStatboticsTeamYear } from '../services/statbotics.js'; //stats  
 //import { getTeam, getTeamEventStatus, getTeamEvents } from '../services/tba.js';
 
 export const data = new SlashCommandBuilder()
-  .setName('test_gamble')
-  .setDescription('Gambling')
+  .setName('test_prediction')
+  .setDescription('prediction')
   .addStringOption((option) =>
     option
       .setName('event')
@@ -33,19 +33,19 @@ export const data = new SlashCommandBuilder()
 
 try {
     // match 13 pull
-    const gotGam = await getGamblingOdds(eventInput, typeInput, matchInput, set);
+    const gotPre = await getPredictionsOdds(eventInput, typeInput, matchInput, set);
 
-    console.log("Full gotGam response:", JSON.stringify(gotGam, null, 2));
+    console.log("Full gotPre response:", JSON.stringify(gotPre, null, 2));
     
-    const teamsObj = gotGam?.teams;
+    const teamsObj = gotPre?.teams;
 
     if (!teamsObj) {
       await interaction.editReply(`No team data was pulled.`);
       return;
     }
 
-    const redGamProb = Math.round(gotGam.pred.winProb * 100);
-    const blueGamProb = 100 - redGamProb;
+    const redPreProb = Math.round(gotPre.pred.winProb * 100);
+    const bluePreProb = 100 - redPreProb;
 
     const blueTeams = Object.entries(teamsObj)
       .filter(([_, info]) => info.alliance === 'blue')
@@ -58,11 +58,11 @@ try {
       .map(([team]) => team);
 
     await interaction.editReply(
-      `Match: ${gotGam.key}\n` +
+      `Match: ${gotPre.key}\n` +
       `Blue: ${blueTeams.join(', ')}\n` +
       `Red: ${redTeams.join(', ')}\n` +
-      `Blue prob: ${blueGamProb}%\n` +
-      `Red prob: ${redGamProb}%`
+      `Blue prob: ${bluePreProb}%\n` +
+      `Red prob: ${redPreProb}%`
     );
 
   } catch (error) {

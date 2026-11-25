@@ -21,7 +21,7 @@ export async function getMatch13TeamSeason(teamNumber, year) {
   return response.json();
 }
 
-export async function getGamblingOdds(eventKey, type, number, set = 1) {
+export async function getPredictionsOdds(eventKey, type, number, set = 1) {
   const t = type.toLowerCase();
   let suffix;
 
